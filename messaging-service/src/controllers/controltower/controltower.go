@@ -3,7 +3,6 @@ package controltower
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"sync"
 	"time"
 
@@ -97,22 +96,6 @@ func (c *ControlTowerCtrlr) CreateRoom(
 	return newRoom, nil
 }
 
-func (c *ControlTowerCtrlr) UpdateMessage(ctx context.Context, message *records.Message) error {
-	// first get the message
-	existingMsg, err := c.Repo.GetMessageByUUID(message.UUID)
-	if err != nil {
-		return err
-	}
-
-	// if we haven't already deleted the message and want to delete it
-	if existingMsg.MessageStatus != enums.MESSAGE_STATUS_DELETED.String() &&
-		message.MessageStatus != existingMsg.MessageStatus {
-		existingMsg.MessageStatus = message.MessageStatus
-	}
-
-	return c.Repo.UpdateMessage(existingMsg)
-}
-
 func (c *ControlTowerCtrlr) DeleteRoom(ctx context.Context, roomUUID string) error {
 	room, err := c.Repo.GetRoomByRoomUUID(roomUUID)
 	if err != nil {
@@ -174,37 +157,6 @@ func (c *ControlTowerCtrlr) SetupClientConnectionV2(
 func (c *ControlTowerCtrlr) GetRoomsByUserUUIDForSubscribing(userUUID string) ([]*records.Room, error) {
 	rooms, err := c.Repo.GetRoomsByUserUUIDForSubscribing(userUUID)
 	return rooms, err
-}
-
-func (c *ControlTowerCtrlr) SaveSeenBy(msg *requests.SeenMessageEvent) error {
-
-	// todo, put in concurrent fn
-	existingMessage, err := c.Repo.GetMessageByUUID(msg.MessageUUID)
-	if err != nil {
-		return err
-	}
-
-	if existingMessage == nil {
-		return errors.New("message not found")
-	}
-
-	seenBy := &records.SeenBy{
-		UserUUID:    msg.UserUUID,
-		MessageID:   int(existingMessage.Model.ID),
-		MessageUUID: msg.MessageUUID,
-	}
-
-	err = c.Repo.SaveSeenBy(seenBy)
-	if err != nil {
-		return err
-	}
-
-	bytes, err := json.Marshal(msg)
-	if err != nil {
-		return err
-	}
-
-	return c.RedisClient.PublishToRedisChannel(msg.RoomUUID, bytes)
 }
 
 func (c *ControlTowerCtrlr) GetRoomsByUserUUID(ctx context.Context, userUUID string, offset int) ([]*records.Room, error) {

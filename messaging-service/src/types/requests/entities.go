@@ -30,13 +30,7 @@ type Message struct {
 	RoomUUID      string    `json:"roomUuid"`
 	MessageText   string    `json:"messageText"`
 	CreatedAtNano float64   `json:"createdAtNano"`
-	MessageStatus string    `json:"messageStatus"`
-	SeenBy        []*SeenBy `json:"seenBy"`
-}
-
-type SeenBy struct {
-	MessageUUID string `json:"messageUuid"`
-	UserUUID    string `json:"userUuid"`
+	MessageStatus string  `json:"messageStatus"`
 }
 
 type Connection struct {

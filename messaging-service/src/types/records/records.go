@@ -1,51 +1,45 @@
 package records
 
 import (
-	"gorm.io/gorm"
+	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type Message struct {
-	gorm.Model
-	UserUUID      string `validate:"required"`
-	RoomUUID      string `validate:"required"`
-	RoomID        int
-	MessageText   string `validate:"required"`
-	UUID          string
-	MessageStatus string
-	CreatedAtNano float64 `json:"createdAtNano"`
-
-	SeenBy []*SeenBy
-}
-
-type SeenBy struct {
-	gorm.Model
-	MessageUUID string
-	UserUUID    string
-	MessageID   int
-}
-
-type Tabler interface {
-	TableName() string
-}
-
-// TableName overrides the table name used by SeenBy to `seen_by`
-func (SeenBy) TableName() string {
-	return "seen_by"
+	ID            primitive.ObjectID `bson:"_id,omitempty"`
+	CreatedAt     time.Time          `bson:"created_at"`
+	UpdatedAt     time.Time          `bson:"updated_at"`
+	DeletedAt     *time.Time         `bson:"deleted_at,omitempty"`
+	UserUUID      string             `bson:"user_uuid"`
+	RoomUUID      string             `bson:"room_uuid"`
+	RoomID        int                `bson:"room_id,omitempty"`
+	MessageText   string             `bson:"message_text"`
+	UUID          string             `bson:"uuid"`
+	MessageStatus string             `bson:"message_status"`
+	CreatedAtNano float64 `bson:"created_at_nano"`
 }
 
 type Room struct {
-	gorm.Model
-	UUID          string
-	CreatedAtNano float64    `json:"createdAtNano"`
-	Members       []*Member  `gorm:"foreignKey:RoomID;" validate:"required"`
-	Messages      []*Message `gorm:"foreignKey:RoomID;" validate:"required"`
+	ID            primitive.ObjectID `bson:"_id,omitempty"`
+	CreatedAt     time.Time          `bson:"created_at"`
+	UpdatedAt     time.Time          `bson:"updated_at"`
+	DeletedAt     *time.Time         `bson:"deleted_at,omitempty"`
+	UUID          string             `bson:"uuid"`
+	CreatedAtNano float64            `bson:"created_at_nano"`
+
+	Members  []*Member  `bson:"-"`
+	Messages []*Message `bson:"-"`
 }
 
 type Member struct {
-	gorm.Model
-	RoomUUID string
-	RoomID   int
-	UserUUID string `validate:"required"`
+	ID        primitive.ObjectID `bson:"_id,omitempty"`
+	CreatedAt time.Time          `bson:"created_at"`
+	UpdatedAt time.Time          `bson:"updated_at"`
+	DeletedAt *time.Time         `bson:"deleted_at,omitempty"`
+	RoomUUID  string             `bson:"room_uuid"`
+	RoomID    int                `bson:"room_id,omitempty"`
+	UserUUID  string             `bson:"user_uuid"`
 }
 
 // /* AUTH   */

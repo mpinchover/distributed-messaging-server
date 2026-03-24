@@ -21,7 +21,6 @@ func ToRequestMessage(msg *records.Message) *requests.Message {
 		MessageText:   msg.MessageText,
 		MessageStatus: msg.MessageStatus,
 		CreatedAtNano: msg.CreatedAtNano,
-		SeenBy:        ToRequestSeenBys(msg.SeenBy),
 	}
 }
 
@@ -41,6 +40,5 @@ func ToRecordMessage(msg *requests.Message) *records.Message {
 		MessageText:   msg.MessageText,
 		MessageStatus: msg.MessageStatus,
 		CreatedAtNano: msg.CreatedAtNano,
-		SeenBy:        ToRecordSeenBys(msg.SeenBy),
 	}
 }

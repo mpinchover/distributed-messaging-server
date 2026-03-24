@@ -57,22 +57,3 @@ type TextMessageEvent struct {
 // 	Messages  []*records.Message `json:"messages"` // maybe make everything the actual record?
 // 	Token     string             `json:"token"`
 // }
-
-// the recpt has read the message
-// client will have the user uuid stored. If the message is opened
-// by not owner user uuid, send out the event
-type SeenMessageEvent struct {
-	EventType   string `json:"eventType" validate:"required"`
-	MessageUUID string `json:"messageUuid" validate:"required"`
-	UserUUID    string `json:"userUuid" validate:"required"`
-	RoomUUID    string `json:"roomUuid" validate:"required"`
-	Token       string `json:"token"`
-}
-
-type DeleteMessageEvent struct {
-	EventType   string `json:"eventType" validate:"required"`
-	MessageUUID string `json:"messageUuid" validate:"required"`
-	UserUUID    string `json:"userUuid" validate:"required"`
-	RoomUUID    string `json:"roomUuid" validate:"required"`
-	Token       string `json:"token"`
-}

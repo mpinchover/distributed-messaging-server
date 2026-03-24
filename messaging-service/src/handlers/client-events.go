@@ -9,15 +9,6 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-func (h *Handler) handleClientEventSeenMessage(conn *websocket.Conn, p []byte) error {
-	msg := &requests.SeenMessageEvent{}
-	err := json.Unmarshal(p, msg)
-	if err != nil {
-		return err
-	}
-	return h.ControlTowerCtrlr.SaveSeenBy(msg)
-}
-
 func (h *Handler) handleClientEventTextMessage(conn *websocket.Conn, p []byte) error {
 	msg := &requests.TextMessageEvent{}
 	err := json.Unmarshal(p, msg)

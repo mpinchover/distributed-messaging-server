@@ -78,37 +78,6 @@ func (h *Handler) HandleRoomEvent(event string) error {
 		return err
 	}
 
-	if eventType == enums.EVENT_SEEN_MESSAGE.String() {
-		seenMsgEvent := &requests.SeenMessageEvent{}
-		err = json.Unmarshal([]byte(event), seenMsgEvent)
-		if err != nil {
-			log.Println(err)
-			return err
-		}
-		err = h.BroadcastEventToChannelSubscribersUserExclusive(seenMsgEvent.RoomUUID, seenMsgEvent.UserUUID, seenMsgEvent)
-		if err != nil {
-			log.Println(err)
-		}
-		return err
-	}
-
-	if eventType == enums.EVENT_DELETE_MESSAGE.String() {
-		deleteMessageEvent := &requests.DeleteMessageEvent{}
-		err = json.Unmarshal([]byte(event), deleteMessageEvent)
-		if err != nil {
-			log.Println(err)
-			return err
-		}
-		err = h.BroadcastEventToChannelSubscribers(
-			deleteMessageEvent.RoomUUID,
-			deleteMessageEvent,
-		)
-		if err != nil {
-			log.Println(err)
-		}
-		return err
-	}
-
 	return nil
 }
 

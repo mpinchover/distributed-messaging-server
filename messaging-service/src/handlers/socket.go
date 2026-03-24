@@ -137,13 +137,6 @@ func (h *Handler) handleIncomingSocketEvents(ws *requests.Websocket) error {
 			}
 		}
 
-		if msgType == enums.EVENT_SEEN_MESSAGE.String() {
-			err := h.handleClientEventSeenMessage(ws.Conn, p)
-			if err != nil {
-				log.Println(err)
-				sendClientError(ws, err)
-			}
-		}
 	}
 
 	return nil

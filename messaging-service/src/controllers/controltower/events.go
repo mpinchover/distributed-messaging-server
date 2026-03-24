@@ -31,7 +31,7 @@ func (c *ControlTowerCtrlr) ProcessTextMessage(msg *requests.TextMessageEvent) (
 	repoMessage := &records.Message{
 		UserUUID:      msg.UserUUID,
 		RoomUUID:      msg.Message.RoomUUID,
-		RoomID:        int(room.Model.ID),
+		RoomID:        0,
 		MessageText:   msg.Message.MessageText,
 		UUID:          msgUUID,
 		MessageStatus: enums.MESSAGE_STATUS_LIVE.String(),
